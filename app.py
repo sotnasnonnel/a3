@@ -44,20 +44,20 @@ def exibir_relatorio():
             .container {{
                 width: 100%;
                 max-width: 100%;
-                padding: 20px;
+                padding: 10px;
             }}
             .header {{
                 background-color: #3A4E5F;
                 color: white;
                 text-align: center;
                 padding: 10px;
-                margin-bottom: 20px;
+                margin-bottom: 5px;
             }}
             .info-line {{
                 background-color: #F1F1F1;
-                padding: 10px;
+                padding: 5px;
                 border: 1px solid #D1D1D1;
-                margin-bottom: 20px;
+                margin-bottom: 5px;
             }}
             .info-line strong {{
                 margin-right: 15px;
@@ -76,19 +76,19 @@ def exibir_relatorio():
                 background-color: #3A4E5F;
                 color: white;
                 padding: 5px;
-                margin-top: 20px;
+                margin-top: 5px;
                 border-radius: 5px;
             }}
             .subsection-header {{
                 background-color: #3A4E5F;
                 color: white;
                 padding: 5px;
-                margin-top: 10px;
+                margin-top: 5px;
                 border-radius: 5px;
             }}
             .section-content {{
                 border: 1px solid #D1D1D1;
-                padding: 10px;
+                padding: 5px;
                 margin-top: 5px;
                 border-radius: 5px;
             }}
@@ -98,7 +98,7 @@ def exibir_relatorio():
             }}
             .column {{
                 flex: 1;
-                padding: 10px;
+                padding: 5px;
                 min-width: 300px;
             }}
             .ishikawa {{
@@ -106,9 +106,9 @@ def exibir_relatorio():
                 justify-content: center;
                 align-items: center;
                 position: relative;
-                margin-top: 20px;
+                margin-top: 25px;
                 width: 100%;
-                min-height: 600px;
+                min-height: 450px;
                 font-size: 9px;
                 overflow: hidden;
             }}
