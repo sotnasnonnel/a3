@@ -3,7 +3,7 @@ from datetime import datetime
 import base64
 from PIL import Image
 
-# Função para exibir o relatório HTML
+# Function to display the HTML report
 def exibir_relatorio():
     follow_up_rows = ''.join(
         [f"<tr><td>{what}</td><td>{who}</td><td>{when.strftime('%d/%m/%Y')}</td><td>{status}</td></tr>" 
@@ -329,13 +329,13 @@ def exibir_relatorio():
     """
     return html_content
 
-# Função para gerar o link de download do HTML
+# Function to generate the download link for the HTML report
 def gerar_html_download_link(html_content):
     b64 = base64.b64encode(html_content.encode()).decode()
     href = f'<a href="data:text/html;base64,{b64}" download="relatorio.html">Download HTML</a>'
     st.markdown(href, unsafe_allow_html=True)
 
-# Função para limpar os dados do relatório
+# Function to clear report data
 def limpar_dados_sidebar():
     st.session_state['obra'] = ''
     st.session_state['autor'] = ''
@@ -356,9 +356,48 @@ def limpar_dados_sidebar():
     st.session_state['follow_up_actions'] = []
     st.session_state['uploaded_file'] = None
 
-# Função principal do Streamlit
+# Function to initialize session state if not already initialized
+def initialize_session_state():
+    if 'obra' not in st.session_state:
+        st.session_state['obra'] = ''
+    if 'autor' not in st.session_state:
+        st.session_state['autor'] = ''
+    if 'titulo' not in st.session_state:
+        st.session_state['titulo'] = ''
+    if 'data' not in st.session_state:
+        st.session_state['data'] = datetime.now()
+    if 'contexto' not in st.session_state:
+        st.session_state['contexto'] = ''
+    if 'condicoes_atuais' not in st.session_state:
+        st.session_state['condicoes_atuais'] = ''
+    if 'meta_objetivos' not in st.session_state:
+        st.session_state['meta_objetivos'] = ''
+    if 'metodo' not in st.session_state:
+        st.session_state['metodo'] = ''
+    if 'medida' not in st.session_state:
+        st.session_state['medida'] = ''
+    if 'mao_de_obra' not in st.session_state:
+        st.session_state['mao_de_obra'] = ''
+    if 'meio_ambiente' not in st.session_state:
+        st.session_state['meio_ambiente'] = ''
+    if 'material' not in st.session_state:
+        st.session_state['material'] = ''
+    if 'maquina' not in st.session_state:
+        st.session_state['maquina'] = ''
+    if 'contramedidas_primordiais' not in st.session_state:
+        st.session_state['contramedidas_primordiais'] = ''
+    if 'contramedidas_secundarias' not in st.session_state:
+        st.session_state['contramedidas_secundarias'] = ''
+    if 'condicao_alvo' not in st.session_state:
+        st.session_state['condicao_alvo'] = ''
+    if 'follow_up_actions' not in st.session_state:
+        st.session_state['follow_up_actions'] = []
+    if 'uploaded_file' not in st.session_state:
+        st.session_state['uploaded_file'] = None
+
+# Main function for Streamlit
 def main():
-    st.set_page_config(layout="wide")  # Define o layout como wide para ocupar toda a largura da página
+    st.set_page_config(layout="wide")  # Define layout as wide to use the full page width
 
     # Custom CSS to reduce the space above the title
     st.markdown(
@@ -377,6 +416,8 @@ def main():
     )
 
     st.title("Gerador de Relatórios A3")
+
+    initialize_session_state()  # Ensure session state variables are initialized
 
     with st.sidebar:
         st.header("Dados do Relatório")
@@ -400,7 +441,7 @@ def main():
         st.session_state['contramedidas_secundarias'] = st.text_area("5.2 - Contramedidas Secundárias", st.session_state.get('contramedidas_secundarias', ''))
         st.session_state['condicao_alvo'] = st.text_area("6 - Condição Alvo", st.session_state.get('condicao_alvo', ''))
         "7. Ações de follow-up"
-        # Criar campos dinâmicos para ações de follow-up
+        # Create dynamic fields for follow-up actions
         if 'follow_up_actions' not in st.session_state:
             st.session_state['follow_up_actions'] = []
 
@@ -415,7 +456,7 @@ def main():
             st.session_state['follow_up_actions'][i]['when'] = st.date_input(f"Quando? (When?) {i+1}", st.session_state['follow_up_actions'][i]['when'])
             st.session_state['follow_up_actions'][i]['status'] = st.text_input(f"Status {i+1}", st.session_state['follow_up_actions'][i]['status'])
 
-        # Botão para apagar dados
+        # Button to clear data
         if st.button("Apagar Dados"):
             limpar_dados_sidebar()
             st.experimental_rerun()
