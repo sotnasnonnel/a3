@@ -2,6 +2,7 @@ import streamlit as st
 from datetime import datetime
 import base64
 from PIL import Image
+import streamlit.components.v1 as components  # Correct import for components
 
 # Function to display the HTML report
 def exibir_relatorio():
@@ -467,7 +468,7 @@ def main():
         st.session_state['follow_up_action_when'] = [action['when'] for action in st.session_state['follow_up_actions']]
         st.session_state['follow_up_action_status'] = [action['status'] for action in st.session_state['follow_up_actions']]
         html_content = exibir_relatorio()
-        st.components.v1.html(html_content, height=1500, scrolling=True)
+        components.html(html_content, height=1500, scrolling=True)  # Correct usage of components.html
         st.session_state['html_content'] = html_content
 
     if st.button("Exportar para HTML"):
