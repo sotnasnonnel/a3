@@ -117,26 +117,26 @@ def exibir_relatorio():
             .ishikawa .arrow {{
                 position: absolute;
                 width: 2px;
-                height: 55%;
+                height: 48%;
                 background-color: #3A4E5F;
                 left: 45%;
-                top: 25%;
+                top: 27%;
             }}
             .ishikawa .arrow2 {{
                 position: absolute;
                 width: 2px;
-                height: 65%;
+                height: 57.7%;
                 background-color: #3A4E5F;
                 left: 15%;
-                top: 20%;
+                top: 23%;
             }}
             .ishikawa .arrow3 {{
                 position: absolute;
                 width: 2px;
-                height: 40%;
+                height: 35%;
                 background-color: #3A4E5F;
                 left: 75%;
-                top: 30%;
+                top: 32%;
             }}
             .ishikawa .cabeca {{
                 position: absolute;
@@ -146,7 +146,7 @@ def exibir_relatorio():
                 border-top: 45px solid transparent;
                 border-bottom: 45px solid transparent;
                 left: 95%;
-                top: 42.5%;
+                top: 40%;
             }}
             .ishikawa .line {{
                 position: absolute;
@@ -158,14 +158,15 @@ def exibir_relatorio():
             }}
             .ishikawa .box {{
                 position: absolute;
-                background-color: #3A4E5F;
-                color: white;
+                background-color: white;
+                color: black;
                 padding: 5px;
                 border-radius: 3px;
                 text-align: center;
                 max-width: 100%; /* Ajuste a largura máxima da caixa para evitar ultrapassar a margem */
                 overflow-wrap: break-word; /* Quebra palavras longas */
                 height: auto; /* Permite que a altura seja ajustada automaticamente */
+                opacity: 0.9;
 
             }}
             .ishikawa .box input {{
@@ -209,6 +210,15 @@ def exibir_relatorio():
                     color: white !important;
                 }}
             }}
+            
+            .format {{
+            background-color: #3A4E5F;
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 5px;
+        }}
+            
         </style>
 
     </head>
@@ -263,27 +273,27 @@ def exibir_relatorio():
                             <div class="cabeca"></div>
                             <div class="line"></div>
                             <div class="box method">
-                                <div>Método</div>
+                                <div class = "format">Método</div>
                                 <div id="metodo">{format_text(st.session_state['metodo'])}</div>
                             </div>
                             <div class="box measurement">
-                                <div>Medida</div>
+                                <div class = "format">Medida</div>
                                 <div id="medida">{format_text(st.session_state['medida'])}</div>
                             </div>
                             <div class="box manpower">
-                                <div>Mão de Obra</div>
+                                <div class = "format">Mão de Obra</div>
                                 <div id="mao_de_obra">{format_text(st.session_state['mao_de_obra'])}</div>
                             </div>
                             <div class="box environment">
-                                <div>Meio Ambiente</div>
+                                <div class = "format">Meio Ambiente</div>
                                 <div id="meio_ambiente">{format_text(st.session_state['meio_ambiente'])}</div>
                             </div>
                             <div class="box material">
-                                <div>Material</div>
+                                <div class = "format">Material</div>
                                 <div id="material">{format_text(st.session_state['material'])}</div>
                             </div>
                             <div class="box machine">
-                                <div>Máquina</div>
+                                <div class = "format">Máquina</div>
                                 <div id="maquina">{format_text(st.session_state['maquina'])}</div>
                             </div>
                         </div>
