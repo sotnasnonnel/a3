@@ -412,6 +412,9 @@ def main():
     st.title("Gerador de Relatórios A3")
 
     with st.sidebar:
+        logo = Image.open("image.png")
+        st.image(logo, use_column_width=True)
+        
         st.header("Dados do Relatório")
         uploaded_html = st.file_uploader("Upload do arquivo (html) para edição", type=['html'])
         if uploaded_html:
