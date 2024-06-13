@@ -2,9 +2,9 @@ import streamlit as st
 from datetime import datetime
 import base64
 from PIL import Image
-import streamlit.components.v1 as components  # Correct import for components
+from bs4 import BeautifulSoup
 
-# Function to display the HTML report
+# Função para exibir o relatório HTML
 def exibir_relatorio():
     follow_up_rows = ''.join(
         [f"<tr><td>{what}</td><td>{who}</td><td>{when.strftime('%d/%m/%Y')}</td><td>{status}</td></tr>" 
@@ -330,13 +330,13 @@ def exibir_relatorio():
     """
     return html_content
 
-# Function to generate the download link for the HTML report
+# Função para gerar o link de download do HTML
 def gerar_html_download_link(html_content):
     b64 = base64.b64encode(html_content.encode()).decode()
     href = f'<a href="data:text/html;base64,{b64}" download="relatorio.html">Download HTML</a>'
     st.markdown(href, unsafe_allow_html=True)
 
-# Function to clear report data
+# Função para limpar os dados do relatório
 def limpar_dados_sidebar():
     st.session_state['obra'] = ''
     st.session_state['autor'] = ''
@@ -357,48 +357,41 @@ def limpar_dados_sidebar():
     st.session_state['follow_up_actions'] = []
     st.session_state['uploaded_file'] = None
 
-# Function to initialize session state if not already initialized
-def initialize_session_state():
-    if 'obra' not in st.session_state:
-        st.session_state['obra'] = ''
-    if 'autor' not in st.session_state:
-        st.session_state['autor'] = ''
-    if 'titulo' not in st.session_state:
-        st.session_state['titulo'] = ''
-    if 'data' not in st.session_state:
-        st.session_state['data'] = datetime.now()
-    if 'contexto' not in st.session_state:
-        st.session_state['contexto'] = ''
-    if 'condicoes_atuais' not in st.session_state:
-        st.session_state['condicoes_atuais'] = ''
-    if 'meta_objetivos' not in st.session_state:
-        st.session_state['meta_objetivos'] = ''
-    if 'metodo' not in st.session_state:
-        st.session_state['metodo'] = ''
-    if 'medida' not in st.session_state:
-        st.session_state['medida'] = ''
-    if 'mao_de_obra' not in st.session_state:
-        st.session_state['mao_de_obra'] = ''
-    if 'meio_ambiente' not in st.session_state:
-        st.session_state['meio_ambiente'] = ''
-    if 'material' not in st.session_state:
-        st.session_state['material'] = ''
-    if 'maquina' not in st.session_state:
-        st.session_state['maquina'] = ''
-    if 'contramedidas_primordiais' not in st.session_state:
-        st.session_state['contramedidas_primordiais'] = ''
-    if 'contramedidas_secundarias' not in st.session_state:
-        st.session_state['contramedidas_secundarias'] = ''
-    if 'condicao_alvo' not in st.session_state:
-        st.session_state['condicao_alvo'] = ''
-    if 'follow_up_actions' not in st.session_state:
-        st.session_state['follow_up_actions'] = []
-    if 'uploaded_file' not in st.session_state:
-        st.session_state['uploaded_file'] = None
+# Função para carregar os dados do HTML
+def carregar_dados_html(uploaded_html):
+    soup = BeautifulSoup(uploaded_html, 'html.parser')
+    
+    st.session_state['obra'] = soup.find(id="obra").text
+    st.session_state['autor'] = soup.find(id="autor").text
+    st.session_state['titulo'] = soup.find(id="titulo").text
+    st.session_state['data'] = datetime.strptime(soup.find(id="data").text, '%d/%m/%Y')
+    st.session_state['contexto'] = soup.find(id="contexto").text.replace('<br>', '\n')
+    st.session_state['condicoes_atuais'] = soup.find(id="condicoes_atuais").text.replace('<br>', '\n')
+    st.session_state['meta_objetivos'] = soup.find(id="meta_objetivos").text.replace('<br>', '\n')
+    st.session_state['metodo'] = soup.find(id="metodo").text.replace('<br>', '\n')
+    st.session_state['medida'] = soup.find(id="medida").text.replace('<br>', '\n')
+    st.session_state['mao_de_obra'] = soup.find(id="mao_de_obra").text.replace('<br>', '\n')
+    st.session_state['meio_ambiente'] = soup.find(id="meio_ambiente").text.replace('<br>', '\n')
+    st.session_state['material'] = soup.find(id="material").text.replace('<br>', '\n')
+    st.session_state['maquina'] = soup.find(id="maquina").text.replace('<br>', '\n')
+    st.session_state['contramedidas_primordiais'] = soup.find(id="contramedidas_primordiais").text.replace('<br>', '\n')
+    st.session_state['contramedidas_secundarias'] = soup.find(id="contramedidas_secundarias").text.replace('<br>', '\n')
+    st.session_state['condicao_alvo'] = soup.find(id="condicao_alvo").text.replace('<br>', '\n')
 
-# Main function for Streamlit
+    st.session_state['follow_up_actions'] = []
+    follow_up_rows = soup.find(id="follow-up-actions").find_all('tr')
+    for row in follow_up_rows:
+        cols = row.find_all('td')
+        st.session_state['follow_up_actions'].append({
+            'what': cols[0].text,
+            'who': cols[1].text,
+            'when': datetime.strptime(cols[2].text, '%d/%m/%Y'),
+            'status': cols[3].text
+        })
+
+# Função principal do Streamlit
 def main():
-    st.set_page_config(layout="wide")  # Define layout as wide to use the full page width
+    st.set_page_config(layout="wide")  # Define o layout como wide para ocupar toda a largura da página
 
     # Custom CSS to reduce the space above the title
     st.markdown(
@@ -418,10 +411,12 @@ def main():
 
     st.title("Gerador de Relatórios A3")
 
-    initialize_session_state()  # Ensure session state variables are initialized
-
     with st.sidebar:
         st.header("Dados do Relatório")
+        uploaded_html = st.file_uploader("Upload do arquivo (html) para edição", type=['html'])
+        if uploaded_html:
+            carregar_dados_html(uploaded_html.getvalue().decode('utf-8'))
+        
         st.session_state['obra'] = st.text_input("Obra", st.session_state.get('obra', ''))
         st.session_state['autor'] = st.text_input("Autor", st.session_state.get('autor', ''))
         st.session_state['titulo'] = st.text_input("Título/Tema", st.session_state.get('titulo', ''))
@@ -442,7 +437,7 @@ def main():
         st.session_state['contramedidas_secundarias'] = st.text_area("5.2 - Contramedidas Secundárias", st.session_state.get('contramedidas_secundarias', ''))
         st.session_state['condicao_alvo'] = st.text_area("6 - Condição Alvo", st.session_state.get('condicao_alvo', ''))
         "7. Ações de follow-up"
-        # Create dynamic fields for follow-up actions
+        # Criar campos dinâmicos para ações de follow-up
         if 'follow_up_actions' not in st.session_state:
             st.session_state['follow_up_actions'] = []
 
@@ -457,7 +452,7 @@ def main():
             st.session_state['follow_up_actions'][i]['when'] = st.date_input(f"Quando? (When?) {i+1}", st.session_state['follow_up_actions'][i]['when'])
             st.session_state['follow_up_actions'][i]['status'] = st.text_input(f"Status {i+1}", st.session_state['follow_up_actions'][i]['status'])
 
-        # Button to clear data
+        # Botão para apagar dados
         if st.button("Apagar Dados"):
             limpar_dados_sidebar()
             st.experimental_rerun()
@@ -468,7 +463,7 @@ def main():
         st.session_state['follow_up_action_when'] = [action['when'] for action in st.session_state['follow_up_actions']]
         st.session_state['follow_up_action_status'] = [action['status'] for action in st.session_state['follow_up_actions']]
         html_content = exibir_relatorio()
-        components.html(html_content, height=1500, scrolling=True)  # Correct usage of components.html
+        st.components.v1.html(html_content, height=1500, scrolling=True)
         st.session_state['html_content'] = html_content
 
     if st.button("Exportar para HTML"):
